@@ -1,30 +1,38 @@
 # Chat Wrapped
 
-A privacy-first React single-page app that turns a WhatsApp-style chat export into an animated year-in-review story.
+A privacy-first React single-page app that turns a WhatsApp `.txt` export into an interactive chat year-in-review.
 
-## Features
-- Chat export parsing in the browser
-- No backend and no chat data upload
-- Message totals, authors, hourly activity, weekdays and daily activity
-- Emoji and conversation insights
-- Keyboard-friendly slide navigation
-- Responsive CSS-only visualisations
-
-## Architecture
-`lib/` contains pure parsing/statistics/date/format functions. React components render the resulting data. This separation keeps analysis testable and makes future Web Worker migration straightforward.
-
-## Run
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Production build:
+For a production build:
 
 ```bash
 npm run build
+npm run preview
 ```
 
-## Privacy
-The selected chat file is processed locally in the browser. The application does not require a server to analyse the export.
+## How it works
+
+1. Select or drag a WhatsApp text export into the browser.
+2. `lib/parser.js` converts raw text into normalized message objects.
+3. `lib/stats.js` computes conversation statistics.
+4. React renders the statistics as a story deck.
+
+No backend or chat upload is required: processing happens in the browser.
+
+## Project structure
+
+- `App.jsx` — application state and parsing flow
+- `src/components/` — React UI components
+- `lib/` — pure parsing, statistics, date and formatting utilities
+- `public/sample-chat.txt` — safe sample data
+- `vite.config.js` — Vite configuration
+
+## Notes
+
+WhatsApp export formats vary by platform, locale and app version. Test the parser against a real export before relying on the results.
