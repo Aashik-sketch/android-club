@@ -1,2 +1,6 @@
-import {useEffect} from 'react';
-export default function Slide({children}){useEffect(()=>{const fn=e=>{if(e.key==='ArrowRight')document.querySelector('.nav:last-of-type')?.click();if(e.key==='ArrowLeft')document.querySelector('.nav:first-of-type')?.click()};window.addEventListener('keydown',fn);return()=>window.removeEventListener('keydown',fn)},[]);return <main className="slide" tabIndex="-1">{children}</main>}
+import { useEffect, useRef } from 'react';
+export default function Slide({ children }) {
+  const ref = useRef(null);
+  useEffect(() => { ref.current?.focus(); }, [children]);
+  return <main ref={ref} className="slide" tabIndex="-1" aria-live="polite">{children}</main>;
+}
