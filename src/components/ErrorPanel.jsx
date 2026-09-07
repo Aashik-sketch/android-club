@@ -1,0 +1,1 @@
+export default function ErrorPanel({error,onReset}){return <main className="error"><section className="error-card"><div className="eyebrow">Something went wrong</div><h1>Could not read the chat</h1><p>{error}</p><button className="nav" onClick={onReset}>Try another file</button></section></main>}
