@@ -1,39 +1,21 @@
 import { useEffect, useMemo } from 'react';
 import Slide from './Slide.jsx';
-
-const fmt = n => Number(n || 0).toLocaleString();
-const pct = (n,d) => d ? Math.round(n/d*100) : 0;
-const date = d => d ? new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}) : '—';
-const hour = h => `${h % 12 || 12}${h < 12 ? ' AM' : ' PM'}`;
-
-export default function Deck({ stats, index, onPrev, onNext, onReset }) {
-  const maxHour = Math.max(...stats.hours.map(x=>x.count),1);
-  const maxAuthor = Math.max(...stats.authors.map(x=>x.count),1);
-  const slides = useMemo(() => [
-    <><div className="eyebrow">Chat Wrapped</div><div className="hero">{fmt(stats.total)}</div><h2>messages worth remembering.</h2><p className="muted">{stats.activeDays} active days · {stats.spanDays} days covered</p></>,
-    <><div className="eyebrow">The people</div><h2>Who carried the conversation?</h2><div className="rank-list">{stats.authors.map((a,i)=><div className="rank" key={a.name}><b>#{i+1}</b><span className="rank-name">{a.name}</span><div className="bar-track"><div className="bar" style={{width:`${pct(a.count,maxAuthor)}%`}}/></div><strong>{fmt(a.count)}</strong></div>)}</div></>,
-    <><div className="eyebrow">Your peak</div><div className="metric">{hour(stats.peakHour)}</div><h2>is your busiest hour.</h2><div className="hour-chart">{stats.hours.map(x=><div className="hour" key={x.name} title={`${hour(x.name)} · ${x.count} messages`}><div className="hour-bar" style={{height:`${Math.max(3,x.count/maxHour*100)}%`}}/><span>{x.name}</span></div>)}</div></>,
-    <><div className="eyebrow">Your rhythm</div><h2>When you show up.</h2><div className="stat-grid">{stats.weekdays.map(x=><div className="stat" key={x.name}><strong>{fmt(x.count)}</strong><span>{x.name}</span></div>)}</div><p className="muted">Average {fmt(stats.avgPerActiveDay)} messages per active day.</p></>,
-    <><div className="eyebrow">Biggest day</div><div className="hero">{fmt(stats.busiestDay?.count)}</div><h2>messages in one day.</h2><p className="muted">{stats.busiestDay?.day || 'No date available'}</p></>,
-    <><div className="eyebrow">The quietest chapter</div><div className="metric">{stats.longestSilence?.hours || 0}h</div><h2>was your longest silence.</h2><p className="muted">Last message before the gap: {date(stats.longestSilence?.at)}</p></>,
-    <><div className="eyebrow">Emoji fingerprint</div><div className="emoji">{stats.topEmoji}</div><h2>your signature emoji.</h2><div className="emoji-row">{stats.emojis.map(x=><span key={x.name} title={`${x.count} uses`}>{x.name} <small>{x.count}</small></span>)}</div></>,
-    <><div className="eyebrow">Your vocabulary</div><h2>The words that define this chat.</h2><div className="word-cloud">{stats.topWords.map((x,i)=><span key={x.name} style={{fontSize:`${1+i%4*.25}rem`}}>{x.name} <small>{x.count}</small></span>)}</div></>,
-    <><div className="eyebrow">Daily openers</div><h2>Who starts the day?</h2>{stats.openers.map(x=><div className="bar-row" key={x.name}><span>{x.name}</span><div className="bar-track"><div className="bar" style={{width:`${pct(x.count,stats.openers[0]?.count||1)}%`}}/></div><b>{x.count}</b></div>)}</>,
-    <><div className="eyebrow">Fast connection</div><div className="metric">{stats.response?.averageMinutes || 0}<small> min</small></div><h2>average reply time.</h2><p className="muted">Based on {fmt(stats.response?.samples || 0)} cross-person message pairs within 24 hours.</p></>,
-    <><div className="eyebrow">The final card</div><div className="hero">{fmt(stats.mediaCount)}</div><h2>media messages.</h2><p className="muted">From {date(stats.first)} to {date(stats.last)}.</p><button className="nav" onClick={onReset}>Analyze another chat</button></>
-  ], [stats, maxHour, maxAuthor, onReset]);
-
-  useEffect(() => {
-    const key = e => { if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if(index < slides.length-1) onNext(slides.length); } if(e.key === 'ArrowLeft' && index>0) onPrev(); if(e.key === 'Home') onReset(); };
-    window.addEventListener('keydown',key); return () => window.removeEventListener('keydown',key);
-  }, [index, slides.length, onNext, onPrev, onReset]);
-
-  const progress = ((index+1)/slides.length)*100;
-  return <div className="deck">
-    <div className="topbar"><strong>CHAT WRAPPED</strong><span>{index+1} / {slides.length}</span></div>
-    <div className="progress"><i style={{width:`${progress}%`}}/></div>
-    <Slide key={index}>{slides[index]}</Slide>
-    <div className="controls"><button className="nav" onClick={onPrev} disabled={!index}>← Back</button><div className="dots" aria-label="Story progress">{slides.map((_,i)=><button key={i} aria-label={`Go to slide ${i+1}`} className={i===index?'dot active':'dot'} onClick={()=>i>index?onNext(i+1):onPrev(i)} />)}</div><button className="nav" onClick={()=>onNext(slides.length)} disabled={index===slides.length-1}>Next →</button></div>
-    <p className="privacy footer-note">Processed locally · nothing uploaded</p>
-  </div>;
+const fmt=n=>Number(n||0).toLocaleString(); const pct=(n,d)=>d?Math.round(n/d*100):0; const date=d=>d?new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'—'; const hour=h=>`${h%12||12}${h<12?' AM':' PM'}`;
+export default function Deck({stats,index,onPrev,onNext,onGo,onReset}){
+ const maxHour=Math.max(...stats.hours.map(x=>x.count),1),maxAuthor=Math.max(...stats.authors.map(x=>x.count),1);
+ const slides=useMemo(()=>[
+  <><div className="eyebrow">Chat Wrapped</div><div className="hero">{fmt(stats.total)}</div><h2>messages worth remembering.</h2><p className="muted">{stats.activeDays} active days · {stats.spanDays} days covered</p></>,
+  <><div className="eyebrow">The people</div><h2>Who carried the conversation?</h2>{stats.authors.map((a,i)=><div className="rank" key={a.name}><b>#{i+1}</b><span className="rank-name">{a.name}</span><div className="bar-track"><div className="bar" style={{width:`${pct(a.count,maxAuthor)}%`}}/></div><strong>{fmt(a.count)}</strong></div>)}</>,
+  <><div className="eyebrow">Your peak</div><div className="metric">{hour(stats.peakHour)}</div><h2>is your busiest hour.</h2><div className="hour-chart">{stats.hours.map(x=><div className="hour" key={x.name} title={`${hour(x.name)} · ${x.count} messages`}><div className="hour-bar" style={{height:`${Math.max(3,x.count/maxHour*100)}%`}}/><span>{x.name}</span></div>)}</div></>,
+  <><div className="eyebrow">Your rhythm</div><h2>When you show up.</h2><div className="stat-grid">{stats.weekdays.map(x=><div className="stat" key={x.name}><strong>{fmt(x.count)}</strong><span>{x.name}</span></div>)}</div><p className="muted">Average {fmt(stats.avgPerActiveDay)} messages per active day.</p></>,
+  <><div className="eyebrow">Biggest day</div><div className="hero">{fmt(stats.busiestDay?.count)}</div><h2>messages in one day.</h2><p className="muted">{stats.busiestDay?.day||'No date available'}</p></>,
+  <><div className="eyebrow">The quietest chapter</div><div className="metric">{stats.longestSilence?.hours||0}h</div><h2>was your longest silence.</h2><p className="muted">Last message before the gap: {date(stats.longestSilence?.at)}</p></>,
+  <><div className="eyebrow">Emoji fingerprint</div><div className="emoji">{stats.topEmoji}</div><h2>your signature emoji.</h2><div className="emoji-row">{stats.emojis.map(x=><span key={x.name} title={`${x.count} uses`}>{x.name} <small>{x.count}</small></span>)}</div></>,
+  <><div className="eyebrow">Your vocabulary</div><h2>The words that define this chat.</h2><div className="word-cloud">{stats.topWords.map((x,i)=><span key={x.name} style={{fontSize:`${1+(i%4)*.25}rem`}}>{x.name} <small>{x.count}</small></span>)}</div></>,
+  <><div className="eyebrow">Daily openers</div><h2>Who starts the day?</h2>{stats.openers.map(x=><div className="bar-row" key={x.name}><span>{x.name}</span><div className="bar-track"><div className="bar" style={{width:`${pct(x.count,stats.openers[0]?.count||1)}%`}}/></div><b>{x.count}</b></div>)}</>,
+  <><div className="eyebrow">Fast connection</div><div className="metric">{stats.response?.averageMinutes||0}<small> min</small></div><h2>average reply time.</h2><p className="muted">Based on {fmt(stats.response?.samples||0)} cross-person message pairs within 24 hours.</p></>,
+  <><div className="eyebrow">The final card</div><div className="hero">{fmt(stats.mediaCount)}</div><h2>media messages.</h2><p className="muted">From {date(stats.first)} to {date(stats.last)}.</p><button className="nav" onClick={onReset}>Analyze another chat</button></>
+ ],[stats,maxHour,maxAuthor,onReset]);
+ useEffect(()=>{const key=e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();if(index<slides.length-1)onNext(slides.length)}if(e.key==='ArrowLeft'&&index>0)onPrev();if(e.key==='Home')onReset()};window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key)},[index,slides.length,onNext,onPrev,onReset]);
+ return <div className="deck"><div className="topbar"><strong>CHAT WRAPPED</strong><span>{index+1} / {slides.length}</span></div><div className="progress"><i style={{width:`${(index+1)/slides.length*100}%`}}/></div><Slide key={index}>{slides[index]}</Slide><div className="controls"><button className="nav" onClick={onPrev} disabled={!index}>← Back</button><div className="dots" aria-label="Story progress">{slides.map((_,i)=><button key={i} aria-label={`Go to slide ${i+1}`} className={i===index?'dot active':'dot'} onClick={()=>onGo(i,slides.length)}/>)}</div><button className="nav" onClick={()=>onNext(slides.length)} disabled={index===slides.length-1}>Next →</button></div><p className="privacy footer-note">Processed locally · nothing uploaded</p></div>;
 }
