@@ -1,19 +1,20 @@
-# Chat Wrapped ✨
+# Chat Wrapped — conversation, turned into a visual story ✨
 
-A privacy-first React + Vite single-page app that turns a WhatsApp `.txt` export into an interactive 11-card conversation story.
+A privacy-first React + Vite experience that transforms a WhatsApp `.txt` export into a cinematic, interactive conversation story. The interface is inspired by modern 21st-style product design: oversized type, restrained color, micro-interactions, strong hierarchy and a deliberately premium editorial feel.
 
-## Highlights
+## What makes this version different
 
-- 🔒 **Local-first:** chat text is processed in the browser; there is no backend.
-- ⚡ **Web Worker:** parsing and analytics run off the UI thread when supported.
-- 📊 **11 story cards:** totals, people, peak hour, weekly rhythm, busiest day, longest silence, emoji fingerprint, vocabulary, daily openers, reply time and media.
-- 🧠 **Pure analytics layer:** `lib/parser.js` and `lib/stats.js` have no React dependency.
-- ♿ **Keyboard accessible:** Arrow keys navigate; Space advances; Home resets.
-- 📱 **Responsive:** desktop and mobile layouts.
-- 🧪 **Automated tests:** parser and analytics edge cases run with Node's built-in test runner.
-- ✅ **CI:** GitHub Actions runs tests and the production build on pushes and pull requests.
+- 🔒 **Local-first:** your chat stays in the browser; there is no backend.
+- ⚡ **Web Worker analytics:** parsing and statistics stay off the main UI thread when supported.
+- ✦ **Cinematic story deck:** 11 cards with progressive storytelling instead of a conventional dashboard.
+- 🎯 **Premium landing experience:** drag-and-drop upload, animated orbit system, live-style preview and clear privacy messaging.
+- 📈 **Conversation intelligence:** people, peak time, rhythm, busiest day, silence, emoji DNA, vocabulary, openers, reply time and media.
+- ⌨️ **Keyboard-first:** Arrow keys navigate, Space advances and Home resets.
+- 📱 **Responsive:** intentionally designed for desktop, tablet and mobile rather than simply shrinking the desktop UI.
+- 🧪 **Testable architecture:** parser and analytics remain framework-free.
+- ✅ **CI ready:** tests and production build run through GitHub Actions.
 
-## Run in VS Code
+## Run locally
 
 ```bash
 git clone https://github.com/Aashik-sketch/android-club.git
@@ -22,7 +23,7 @@ npm install
 npm run dev
 ```
 
-Open the local Vite URL shown in the terminal, normally `http://localhost:5173`.
+Then open the Vite URL shown in the terminal.
 
 ### Production verification
 
@@ -30,6 +31,22 @@ Open the local Vite URL shown in the terminal, normally `http://localhost:5173`.
 npm test
 npm run build
 npm run preview
+```
+
+## Product flow
+
+```text
+WhatsApp .txt export
+        ↓
+Drag & drop / file picker
+        ↓
+Web Worker
+        ↓
+Parser → normalized messages
+        ↓
+Statistics engine
+        ↓
+Cinematic 11-card story
 ```
 
 ## Project structure
@@ -40,7 +57,6 @@ npm run preview
 ├── main.jsx
 ├── index.html
 ├── index.css
-├── vite.config.js
 ├── package.json
 ├── lib/
 │   ├── parser.js
@@ -54,27 +70,20 @@ npm run preview
 │   ├── BarChart.jsx
 │   ├── Heatmap.jsx
 │   └── ErrorPanel.jsx
-├── src/worker/
-│   └── chatWorker.js
+├── src/worker/chatWorker.js
 ├── hooks/
-│   ├── useKeyPress.js
-│   └── useLocalStorage.js
 ├── test/
-│   └── parser.test.js
-└── public/
-    └── sample-chat.txt
+└── public/sample-chat.txt
 ```
 
-## Architecture
+## Design direction
 
-`raw .txt → Web Worker → parser → normalized messages → statistics → React story deck`
-
-The parser and statistics modules are intentionally framework-free. This keeps the data pipeline testable and makes the Worker migration straightforward.
+The redesign intentionally avoids a generic admin-dashboard look. It uses a near-black canvas, acid-lime accent, oversized editorial typography, thin borders, subtle ambient glow, animated orbit rings and compact monospace metadata. The result is closer to a premium product launch page than a student analytics dashboard.
 
 ## Privacy
 
-No chat is sent to a server. The app reads the selected file using browser APIs and performs parsing/analytics locally. Do not put private exports into the repository; use `public/sample-chat.txt` only for sanitized demo data.
+No chat is sent to a server. The selected file is read with browser APIs and processed locally. Never commit a real private chat export; `public/sample-chat.txt` is intended only for sanitized demo data.
 
 ## Parser note
 
-WhatsApp export syntax can vary by platform, locale and application version. The parser supports common day/month/year, year/month/day, 12-hour and 24-hour forms plus multiline messages, but a real export should always be tested before claiming universal compatibility.
+WhatsApp export syntax can vary by platform, locale and application version. The parser supports common date/time formats and multiline messages, but a real export should always be tested before claiming universal compatibility.
