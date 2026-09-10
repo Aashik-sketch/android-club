@@ -20,28 +20,6 @@
 >
 > Upload a WhatsApp `.txt` export and Chat Wrapped turns raw conversation history into an interactive visual narrative — while keeping the data inside your browser.
 
-## 🎬 See it in action
-
-**Live website:** https://android-club.vercel.app/
-
-### Desktop preview
-
-<p align="center">
-  <a href="https://android-club.vercel.app/">
-    <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fandroid-club.vercel.app%2F?w=1400" alt="Chat Wrapped desktop website preview" width="100%" />
-  </a>
-</p>
-
-### Mobile preview
-
-<p align="center">
-  <a href="https://android-club.vercel.app/">
-    <img src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fandroid-club.vercel.app%2F?w=500" alt="Chat Wrapped mobile-width website preview" width="55%" />
-  </a>
-</p>
-
-> The previews above are generated from the deployed website so the README gives visitors an immediate visual impression before they open the demo.
-
 ## ✨ Why this project stands out
 
 This is deliberately **not** a generic analytics dashboard. The product treats conversation data like a visual story.
@@ -153,27 +131,6 @@ Conversation exports can contain highly personal information. Keeping processing
 ## ⚠️ Parser note
 
 WhatsApp export syntax can vary by platform, locale and application version. The parser supports common date/time formats and multiline messages, but a real export should always be tested before claiming universal compatibility.
-
-## 📈 Current project rating
-
-**My rating: 8.8/10**
-
-| Area | Score | Why |
-|---|---:|---|
-| UI / visual direction | **9.3/10** | Strong editorial/cinematic identity instead of a standard dashboard |
-| Product concept | **9.0/10** | Easy to understand and has a clear emotional payoff |
-| Engineering | **8.7/10** | React + Vite + Worker + separated parser/statistics is a solid structure |
-| Privacy | **9.2/10** | Local-first processing is a meaningful product decision |
-| Documentation | **8.5/10** | Now includes visual previews, architecture and setup guidance |
-| Recruitment appeal | **9.0/10** | Shows UI/UX thinking, data processing and performance awareness |
-
-### What would push it toward 10/10?
-
-1. Add real automated browser tests for the critical upload → parse → story flow.
-2. Add Lighthouse/performance metrics to the README.
-3. Add accessibility checks and stronger keyboard/screen-reader coverage.
-4. Add a polished demo dataset and a one-click **Try sample chat** experience.
-5. Add release screenshots/GIFs that are versioned inside the repository so the README visuals never depend on an external screenshot service.
 
 ---
 
